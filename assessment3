@@ -1,0 +1,157 @@
+!pip install pandas
+!pip install numpy
+!pip install seaborn
+!pip install sklearn
+import sklearn
+print(sklearn.__version__)
+%matplotlib inline
+
+import pandas as pd
+import numpy as np
+import seaborn as sns
+from sklearn.model_selection import train_test_split
+df = sns.load_dataset('tips')
+#df.info()
+#df[(df['smoker'] == 'Yes') & (df['sex']=='Female')]
+df.drop(['size'],axis=1,inplace=True)
+#scaling
+from sklearn.preprocessing import StandardScaler
+stand = StandardScaler()
+df_model_fit=df.copy()
+df_model_fit
+stand_cols=['total_bill','tip']
+df_model_fit[stand_cols]=stand.fit_transform(df_model_fit[stand_cols])
+df_model_fit
+#encoding
+from sklearn.preprocessing import OneHotEncoder
+encoder=OneHotEncoder(sparse=False)
+enc_cols = ['sex','day','time']
+df_encoded = pd.DataFrame(encoder.fit_transform(df_model_fit[enc_cols]))
+print(df_encoded)
+df_encoded.columns = encoder.get_feature_names(enc_cols)
+df_model_fit=df_model_fit.drop(enc_cols,axis=1)
+df_model_fit=pd.concat([df_model_fit,df_encoded],axis=1)
+#Logistic regression
+from sklearn.linear_model import LogisticRegression
+from sklearn import metrics
+x=df_model_fit.drop('smoker', axis=1)
+y=df_model_fit['smoker']
+x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=0.2)
+logreg=LogisticRegression()
+logreg.fit(x_train,y_train)
+y_pred = logreg.predict(x_test)
+print("Logistic accuracy: ", metrics.accuracy_score(y_test,y_pred))
+#RandomForestClassifier
+from sklearn.ensemble import RandomForestClassifier
+rfc = RandomForestClassifier(n_estimators=15)
+rfc.fit(x_train,y_train)
+rfc.feature_importances_
+
+#LINEAR REGRESSION
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_absolute_error
+df = pd.read_csv('https://raw.githubusercontent.com/jbrownlee/Datasets/master/housing.csv', header=None)
+df.info()
+data = df.values
+x, y = data[:, :-1], data[:, -1]
+print(y)
+x_train, x_test, y_train, y_test = train_test_split(x,y,test_size=0.33, random_state=1)
+print(x_train.shape, y_train.shape)
+reg = LinearRegression()
+model = LinearRegression()
+model.fit(x_train, y_train)
+test = model.predict(x_test)
+mae = mean_absolute_error(y_test, test)
+print(mae)
+
+#OUTLIERS
+import pandas as pd
+import numpy as np
+import seaborn as sns
+#dataTelecom.isnull().sum()
+data = pd.read_csv("/content/sample_data/california_housing_train.csv")
+print('mean=',np.mean(data))
+print('stdv=',np.std(data))
+datatip=sns.load_dataset("tips")
+datatip.head(10)
+sns.distplot(datatip['tip'], hist=False)
+plt.show()
+meantip, stdtip=np.mean(datatip['tip']),np.std(datatip['tip'])
+upplevel,lowlevel=meantip+(stdtip*3),meantip-(stdtip*3)
+print(upplevel,lowlevel)
+outliers=[x for x in datatip['tip'] if x > upplevel or x < lowlevel]
+print(outliers)
+non_outliers=[x for x in datatip['tip'] if x < upplevel or x > lowlevel]
+sns.distplot(non_outliers, hist=False)
+
+#INTERACTIVE GRAPHS
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+import plotly.express as px
+data = sns.load_dataset("tips")
+data.describe()
+px.scatter(data,x='total_bill',y='tip',color='sex')
+px.bar(data,x='sex',y='tip',color='smoker',barmode='group')
+px.line(data,x='total_bill',y='tip',color='sex', line_group='smoker')
+px.pie(data, values='tip', names='sex', title='Men vs Women tips')
+datairis=px.data.iris()
+px.scatter_matrix(datairis, dimensions=["sepal_width", "sepal_length", "petal_width", "petal_length"], color="species")
+
+#IMAGE & TEXT PROCESSING
+from PIL import Image
+import matplotlib.pyplot as plt
+image = Image.open("/content/IMG-20200816-WA0010.jpg")
+print(image.format)
+print(image.size)
+#print(list(image.getdata()))
+#print(np.array(image))
+image=image.rotate(90)
+plt.imshow(image)
+#plt.show()
+im = Image.open("/content/IMG-20200816-WA0010.jpg").convert('L')
+plt.imshow(im)
+#plt.show()
+import nltk
+nltk.download('punkt')
+nltk.download('stopwords')
+from nltk.tokenize import sent_tokenize,word_tokenize
+text='''This is guvi assessment. Link should be submitted by Jan 21'''
+print(sent_tokenize(text))
+print(word_tokenize(text))
+tok=word_tokenize(text)
+from nltk.corpus import stopwords
+stopword=stopwords.words('english')
+sent_stopword=[]
+for word in tok:
+  if word in stopword:
+    sent_stopword.append(word)
+print(sent_stopword)
+from nltk.stem.porter import PorterStemmer
+stemmed = [PorterStemmer().stem(w) for w in tok]
+print("Stemmed words are ", stemmed)
+nltk.download('wordnet')
+from nltk.stem.wordnet import WordNetLemmatizer
+lemmed = [WordNetLemmatizer().lemmatize(word) for word in tok]
+print("Lemmatized words are ", lemmed)
+
+#MISSING VALUES TREATMENT
+import pandas as pd
+import numpy as np
+data = pd.read_csv("/content/college_2.csv")
+data.isnull().sum()
+#print(data['CodeKata Score']<=0)
+data=data.replace(to_replace=0,value=np.nan)
+data.head(10)
+print(np.isnan(data['CodeKata Score']))
+data.fillna(0)
+data.fillna(method='pad').head(10)
+data.fillna(method='bfill').head(10)
+data.dropna(how='any')
+data.dropna(how='all')
+data.replace(to_replace=np.nan, value=5)
+data.interpolate(method ='linear', limit_direction ='forward')
