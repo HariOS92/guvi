@@ -1,0 +1,25 @@
+#Profit = (Revenue - Budget)/Budget
+import matplotlib.pyplot as plt
+%matplotlib inline
+plt.scatter(dataBudgetRevenue['revenue'], dataBudgetRevenue['profit'])
+
+#Do the movies that have high vote_avergae make lot of profits ?
+plt.scatter(dataBudgetRevenue['vote_average'], dataBudgetRevenue['profit'])
+
+#What genres make the most money?
+dataBudgetRevenue.plot(x='genre1',y='revenue',kind='scatter')
+
+#Is there a bias with producers in terms of genres that they do - Do specific producer only produce specific genre movies?
+ax=dataBudgetRevenue.plot(x='Producer1',y='genre1',kind='scatter')
+
+#Will a longer run time bring higher profits?
+dataBudgetRevenue.plot(x='runtime',y='profit',kind='scatter')
+
+#Does the presence of a homepage indicate higher profits
+plt.bar(dataBudgetRevenue['homePagePresent'] ,dataBudgetRevenue['profit'])
+
+#Over a period of time, how have the profitability changed - Over the period of time, which genre of movies have grossed well ?
+plt.scatter(dataBudgetRevenue['release_date'],dataBudgetRevenue['profit'])
+
+#If the movie speaks multiple languages, is the profit % higher?
+plt.bar(dataBudgetRevenue['TotalLanguages'], dataBudgetRevenue['profit'])
