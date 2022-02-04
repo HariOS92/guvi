@@ -1,3 +1,6 @@
+import pandas as pd
+dataBudgetRevenue = pd.read_csv('finalCleanedDatawithgenrecol.csv')
+
 #Profit = (Revenue - Budget)/Budget
 import matplotlib.pyplot as plt
 %matplotlib inline
@@ -5,6 +8,9 @@ plt.scatter(dataBudgetRevenue['revenue'], dataBudgetRevenue['profit'])
 
 #Do the movies that have high vote_avergae make lot of profits ?
 plt.scatter(dataBudgetRevenue['vote_average'], dataBudgetRevenue['profit'])
+plt.xlabel('Vote Average')
+plt.ylabel('Profit')
+plt.show()
 
 #What genres make the most money?
 dataBudgetRevenue.plot(x='genre1',y='revenue',kind='scatter')
