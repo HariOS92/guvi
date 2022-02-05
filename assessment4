@@ -3,6 +3,7 @@ dataBudgetRevenue = pd.read_csv('finalCleanedDatawithgenrecol.csv')
 
 #Profit = (Revenue - Budget)/Budget
 import matplotlib.pyplot as plt
+import seaborn as sns
 %matplotlib inline
 plt.scatter(dataBudgetRevenue['revenue'], dataBudgetRevenue['profit'])
 
@@ -11,6 +12,7 @@ plt.scatter(dataBudgetRevenue['vote_average'], dataBudgetRevenue['profit'])
 plt.xlabel('Vote Average')
 plt.ylabel('Profit')
 plt.show()
+# inference - Yes, higher vote average gives higher profit
 
 #What genres make the most money?
 dataBudgetRevenue.plot(x='genre1',y='revenue',kind='scatter')
@@ -20,12 +22,19 @@ ax=dataBudgetRevenue.plot(x='Producer1',y='genre1',kind='scatter')
 
 #Will a longer run time bring higher profits?
 dataBudgetRevenue.plot(x='runtime',y='profit',kind='scatter')
+# inference - movies with runtime between 50 to 150 days made higher profits
 
 #Does the presence of a homepage indicate higher profits
 plt.bar(dataBudgetRevenue['homePagePresent'] ,dataBudgetRevenue['profit'])
+# inference - Profit does not depend on Home page
 
 #Over a period of time, how have the profitability changed - Over the period of time, which genre of movies have grossed well ?
-plt.scatter(dataBudgetRevenue['release_date'],dataBudgetRevenue['profit'])
+#plt.scatter(dataBudgetRevenue['release_date'],dataBudgetRevenue['profit'])
+sns.relplot(pd.to_datetime(dataBudgetRevenue['release_date']).dt.year,dataBudgetRevenue['profit'], hue=dataBudgetRevenue['genre1'],kind='scatter')
+plt.xticks(rotation = 45, ha = 'right')
+plt.show()
+# inference - 
 
 #If the movie speaks multiple languages, is the profit % higher?
 plt.bar(dataBudgetRevenue['TotalLanguages'], dataBudgetRevenue['profit'])
+# inference - If movies released upto 3 languages has more profit, more than 3 languages does not guarantee more profit
